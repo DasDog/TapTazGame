@@ -1,0 +1,136 @@
+<!-- 
+		Name: Benton Amon
+		Date: 4/29/2021
+		Class: CSCI2447, Javascript Fundamentals
+		Project 6
+ -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+      
+        <title>Tap Taz (CSCI2447)</title>
+        <link rel="icon" type="image/png" href="img/bugsBunny.png">
+        <link href="game.css" rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+        
+        <script>
+            
+            var firstName = " ";
+            var userScore = 0;
+            var time_left = 30;
+            var clock;
+            var t;
+            var devil_count = 0;
+            
+            
+            $(document).ready(function() {
+                var firstName = prompt("What is your name?","");
+                
+                $('#displayName').html("Are you ready, " + firstName + "?");
+                $(".timer").hide(); // hides the time until game is started
+                $("#start_button").click(function(){
+                   start(); 
+                }); // end start_button click
+
+                
+                $("#gamespace").on("click","img",function(){
+                    score();
+                    $(this).hide();
+                }); // end
+                
+            });
+            
+            // Function that runs when the start button is clicked
+            function start() {
+                updateTimer();
+                addDevil();
+                $("#start_button").off();
+            }
+            
+            // Controls the timer of the game. Counts down by one second until there's 0 seconds left and clears the page.
+            function updateTimer() {
+                if(time_left<0) {
+                    clearTimeout(t);
+                    $('img').remove(); // Removes all images after time runs out
+                    alert("Congratulations! You scored " + userScore + " points."); // Display score
+                    location.reload(); // Restart game
+                } else {
+                    $(".timer").show();
+                    $(".timer").html("Timer: " + time_left + " seconds left");
+                    clock = setTimeout("updateTimer()", 1000); // Runs the update timer every second to count time down by 1 second at a time
+                    time_left -= 1;
+                }
+            }
+
+            // Get random X value
+            function randPosX() {
+                return Math.floor(Math.random()*538);
+            }
+            
+            // Get random Y value
+            function randPosY() {
+                return Math.floor(Math.random()*268);
+            }
+            
+            // Adds a picture to the screen and fades it out after 3 seconds                
+            function addDevil() {
+                var randX = randPosX();
+                var randY = randPosY();
+                $("#gamespace").append('<img id="devil'+devil_count+'" src="img/tasmanianDevil.png" style="top: ' +randY+ 'px;left: ' +randX+ 'px;" />');
+                $('#devil' + devil_count).fadeOut(3000);
+                devil_count++;
+                var r=Math.floor(Math.random()*2000);
+                t = setTimeout("addDevil()", r);
+            }
+            
+            
+            
+            // Adds to the player's score and writes it to the page
+            function score() {
+                userScore++;
+                $("#score").html(userScore + " pts");
+            }
+
+                        
+            
+     
+        </script>
+    
+    </head>
+    
+    <body>
+
+        <div id="content">
+            <embed name="music" src="looneyTunes.mp3" loop="false" hidden="true" autostart="true">
+
+		<h1>Tap Taz</h1>
+
+		<p>After clicking "start", you will have 30 seconds to click
+		as many images as you can. The images appear randomly so be ready! </p>
+            
+            
+        <p id="displayName"></p>
+            
+            
+		<div id="controls">
+            <span id="score"><script>document.write(userScore + "pts")</script></span>
+			<button type="button" id="start_button">Start!</button>
+		</div>
+		
+		
+        <div class="timer">
+            
+        </div>    
+            
+		
+		<div id="gamespace">
+            
+		</div>
+        
+		<audio controls autoplay>
+                <source src="looneyTunes.mp3" type="audio/mpeg"> <!-- Plays music when the page is opened -->
+            </audio>
+        </div>
+    </body>
+</html>
